@@ -47,6 +47,11 @@ public class ArticleDetailFragment extends Fragment implements
     private static final float PARALLAX_FACTOR = 1.25f;
     private static final int HEX_HTML_MASK = 0x00ffffff;
 
+    private static final String REGEX_LINE_END_DUAL_FIND = "(\r\n\r\n|\n\n)";
+    private static final String REGEX_LINE_END_DUAL_REPLACE = "<br /><br />";
+    private static final String REGEX_LINE_END_SINGLE_FIND = "(\r\n|\n)";
+    private static final String REGEX_LINE_END_SINGLE_REPLACE = " ";
+
     private Cursor mCursor;
     private long mItemId;
     private View mRootView;
@@ -237,7 +242,13 @@ public class ArticleDetailFragment extends Fragment implements
                                 + "</font>"));
 
             }
-            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
+            bodyView.setText(
+                    Html.fromHtml(
+                            mCursor.getString(ArticleLoader.Query.BODY)
+                                    .replaceAll(REGEX_LINE_END_DUAL_FIND,REGEX_LINE_END_DUAL_REPLACE)
+                                    .replaceAll(REGEX_LINE_END_SINGLE_FIND,REGEX_LINE_END_SINGLE_REPLACE)
+                    )
+            );
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override
