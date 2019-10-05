@@ -34,6 +34,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static com.example.xyzreader.ui.ArticleDetailActivity.BOOK_ID;
+import static com.example.xyzreader.ui.ArticleDetailActivity.LIST_POSITION;
+
 /**
  * An activity representing a list of Articles. This activity has different presentations for
  * handset and tablet-size devices. On handsets, the activity presents a list of items, which when
@@ -154,8 +157,15 @@ public class ArticleListActivity extends ActionBarActivity implements
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+                    int adapterPosition = vh.getAdapterPosition();
+                    long bookId = getItemId(adapterPosition);
+                    Intent intent = new Intent(
+                            Intent.ACTION_VIEW,
+                            ItemsContract.Items.buildItemUri(bookId)
+                    );
+                    intent.putExtra(LIST_POSITION, adapterPosition);
+                    intent.putExtra(BOOK_ID, bookId);
+                    startActivity(intent);
                 }
             });
             return vh;

@@ -3,6 +3,7 @@ package com.example.xyzreader.ui;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
@@ -19,16 +20,18 @@ import android.view.WindowInsets;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
-import com.example.xyzreader.data.ItemsContract;
 
 /**
  * An activity representing a single Article detail screen, letting you swipe between articles.
  */
 public class ArticleDetailActivity extends ActionBarActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
+    public static final String LIST_POSITION = "list_position";
+    public static final String BOOK_ID = "book_id";
 
     private Cursor mCursor;
     private long mStartId;
+    private int mStartPosition;
 
     private long mSelectedItemId;
     private int mSelectedItemUpButtonFloor = Integer.MAX_VALUE;
@@ -106,8 +109,10 @@ public class ArticleDetailActivity extends ActionBarActivity
         }
 
         if (savedInstanceState == null) {
-            if (getIntent() != null && getIntent().getData() != null) {
-                mStartId = ItemsContract.Items.getItemId(getIntent().getData());
+            if (getIntent() != null) {
+                Intent intent = getIntent();
+                mStartId = intent.getLongExtra(BOOK_ID, 0L);
+                mStartPosition = intent.getIntExtra(LIST_POSITION, 0);
                 mSelectedItemId = mStartId;
             }
         }
@@ -122,19 +127,9 @@ public class ArticleDetailActivity extends ActionBarActivity
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         mCursor = cursor;
         mPagerAdapter.notifyDataSetChanged();
-
-        // Select the start ID
-        if (mStartId > 0) {
-            mCursor.moveToFirst();
-            // TODO: optimize
-            while (!mCursor.isAfterLast()) {
-                if (mCursor.getLong(ArticleLoader.Query._ID) == mStartId) {
-                    final int position = mCursor.getPosition();
-                    mPager.setCurrentItem(position, false);
-                    break;
-                }
-                mCursor.moveToNext();
-            }
+        if (mStartPosition > 0) {
+            mCursor.moveToPosition(mStartPosition);
+            mPager.setCurrentItem(mStartPosition, false);
             mStartId = 0;
         }
     }
