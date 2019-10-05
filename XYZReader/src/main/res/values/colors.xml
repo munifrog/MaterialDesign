@@ -35,11 +35,15 @@
     <color name="black_muted">#ff333333</color>
     <color name="black_faded">#6000</color>
 
+    <color name="scrim_darkest">#c0000000</color>
+    <color name="scrim_lightest">#00000000</color>
+    <color name="scrim_constant">#40000000</color>
+
     <color name="card_title">@color/gray_light</color>
     <color name="card_body">@color/gray_medium</color>
 
     <color name="details_header_text_title">@color/white</color>
-    <color name="details_header_text_date">@color/gray_dark</color>
+    <color name="details_header_text_date">@color/gray_light</color>
     <color name="details_header_text_author">@color/white</color>
     <color name="details_header_background">@color/black_muted</color>
 

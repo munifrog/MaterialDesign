@@ -28,7 +28,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="112dp"
-                    android:background="@drawable/photo_background_protection" />
+                    android:background="@drawable/scrim_detail" />
 
             </FrameLayout>
 
