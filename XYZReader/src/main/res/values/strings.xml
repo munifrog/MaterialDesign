@@ -9,4 +9,5 @@
 
     <string name="up">Up</string>
 
+    <string name="transition_image">im_%08x_common</string>
 </resources>

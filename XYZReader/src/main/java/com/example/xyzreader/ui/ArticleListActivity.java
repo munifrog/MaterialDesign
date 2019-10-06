@@ -9,6 +9,8 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +38,7 @@ import java.util.GregorianCalendar;
 
 import static com.example.xyzreader.ui.ArticleDetailActivity.BOOK_ID;
 import static com.example.xyzreader.ui.ArticleDetailActivity.LIST_POSITION;
+import static com.example.xyzreader.ui.ArticleDetailActivity.TRANSITION_IMAGE_ID;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
@@ -63,7 +66,6 @@ public class ArticleListActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_article_list);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
 
         final View toolbarContainerView = findViewById(R.id.toolbar_container);
 
@@ -165,7 +167,19 @@ public class ArticleListActivity extends ActionBarActivity implements
                     );
                     intent.putExtra(LIST_POSITION, adapterPosition);
                     intent.putExtra(BOOK_ID, bookId);
-                    startActivity(intent);
+                    Bundle bundle = null;
+
+                    // https://stackoverflow.com/a/52703709
+                    String transitionName = ViewCompat.getTransitionName(vh.thumbnailView);
+                    intent.putExtra(TRANSITION_IMAGE_ID, transitionName);
+                    if (transitionName != null) {
+                        bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                ArticleListActivity.this,
+                                view,
+                                transitionName
+                        ).toBundle();
+                    }
+                    startActivity(intent, bundle);
                 }
             });
             return vh;
@@ -184,7 +198,8 @@ public class ArticleListActivity extends ActionBarActivity implements
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            mCursor.moveToPosition(position);
+            long itemId = getItemId(position);
+
             holder.titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
             Date publishedDate = parsePublishedDate();
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {
@@ -206,6 +221,9 @@ public class ArticleListActivity extends ActionBarActivity implements
                     mCursor.getString(ArticleLoader.Query.THUMB_URL),
                     ImageLoaderHelper.getInstance(ArticleListActivity.this).getImageLoader());
             holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
+
+            String sTransitionImageId = holder.getTransitionImageId(itemId);
+            ViewCompat.setTransitionName(holder.thumbnailView, sTransitionImageId);
         }
 
         @Override
@@ -218,12 +236,18 @@ public class ArticleListActivity extends ActionBarActivity implements
         public DynamicHeightNetworkImageView thumbnailView;
         public TextView titleView;
         public TextView subtitleView;
+        private String transitionImageFormat;
 
         public ViewHolder(View view) {
             super(view);
             thumbnailView = (DynamicHeightNetworkImageView) view.findViewById(R.id.thumbnail);
             titleView = (TextView) view.findViewById(R.id.article_title);
             subtitleView = (TextView) view.findViewById(R.id.article_subtitle);
+            transitionImageFormat = view.getResources().getString(R.string.transition_image);
+        }
+
+        String getTransitionImageId(long position) {
+            return String.format(transitionImageFormat, position);
         }
     }
 }

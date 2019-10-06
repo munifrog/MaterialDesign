@@ -28,6 +28,7 @@ public class ArticleDetailActivity extends ActionBarActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String LIST_POSITION = "list_position";
     public static final String BOOK_ID = "book_id";
+    public static final String TRANSITION_IMAGE_ID = "transition_name_image";
 
     private Cursor mCursor;
     private long mStartId;
@@ -113,6 +114,10 @@ public class ArticleDetailActivity extends ActionBarActivity
                 Intent intent = getIntent();
                 mStartId = intent.getLongExtra(BOOK_ID, 0L);
                 mStartPosition = intent.getIntExtra(LIST_POSITION, 0);
+                String transitionImageId = intent.getStringExtra(TRANSITION_IMAGE_ID);
+                if (transitionImageId != null && !transitionImageId.isEmpty()) {
+                    mPagerAdapter.setTransitionImageId(transitionImageId);
+                }
                 mSelectedItemId = mStartId;
             }
         }
@@ -153,6 +158,8 @@ public class ArticleDetailActivity extends ActionBarActivity
     }
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
+        private String mTransitionImageId;
+
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -170,12 +177,20 @@ public class ArticleDetailActivity extends ActionBarActivity
         @Override
         public Fragment getItem(int position) {
             mCursor.moveToPosition(position);
-            return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID));
+
+            return ArticleDetailFragment.newInstance(
+                    mCursor.getLong(ArticleLoader.Query._ID),
+                    mTransitionImageId
+            );
         }
 
         @Override
         public int getCount() {
             return (mCursor != null) ? mCursor.getCount() : 0;
+        }
+
+        void setTransitionImageId(String transitionId) {
+            mTransitionImageId = transitionId;
         }
     }
 }

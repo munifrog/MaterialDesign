@@ -18,6 +18,7 @@ import java.util.GregorianCalendar;
 
 import android.os.Bundle;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.graphics.Palette;
 import android.text.Html;
 import android.text.format.DateUtils;
@@ -44,6 +45,7 @@ public class ArticleDetailFragment extends Fragment implements
     private static final String TAG = "ArticleDetailFragment";
 
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_TRANS_IMAGE_ID = "transition__image_id";
     private static final float PARALLAX_FACTOR = 1.25f;
     private static final int HEX_HTML_MASK = 0x00ffffff;
 
@@ -66,6 +68,7 @@ public class ArticleDetailFragment extends Fragment implements
     private int mScrollY;
     private boolean mIsCard = false;
     private int mStatusBarFullOpacityBottom;
+    private static String mTransitionImageId;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
@@ -80,9 +83,13 @@ public class ArticleDetailFragment extends Fragment implements
     public ArticleDetailFragment() {
     }
 
-    public static ArticleDetailFragment newInstance(long itemId) {
+    public static ArticleDetailFragment newInstance(
+            long itemId,
+            String imageTransitionId
+    ) {
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_ITEM_ID, itemId);
+        arguments.putString(ARG_TRANS_IMAGE_ID, imageTransitionId);
         ArticleDetailFragment fragment = new ArticleDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -92,8 +99,15 @@ public class ArticleDetailFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            mItemId = getArguments().getLong(ARG_ITEM_ID);
+        Bundle arguments = getArguments();
+        if (arguments.containsKey(ARG_ITEM_ID)) {
+            mItemId = arguments.getLong(ARG_ITEM_ID);
+        }
+
+        if (arguments.containsKey(ARG_TRANS_IMAGE_ID)) {
+            mTransitionImageId = arguments.getString(ARG_TRANS_IMAGE_ID);
+        } else {
+            mTransitionImageId = "";
         }
 
         mIsCard = getResources().getBoolean(R.bool.detail_is_card);
@@ -142,6 +156,7 @@ public class ArticleDetailFragment extends Fragment implements
         });
 
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
+        ViewCompat.setTransitionName(mPhotoView, mTransitionImageId);
         mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
         mStatusBarColorDrawable = new ColorDrawable(0);
