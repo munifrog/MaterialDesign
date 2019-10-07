@@ -20,6 +20,8 @@ import android.os.Bundle;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
@@ -33,6 +35,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
+import com.example.xyzreader.adapt.ParagraphListAdapter;
 import com.example.xyzreader.data.ArticleLoader;
 
 /**
@@ -50,7 +53,8 @@ public class ArticleDetailFragment extends Fragment implements
     private static final int HEX_HTML_MASK = 0x00ffffff;
 
     private static final String REGEX_LINE_END_DUAL_FIND = "(\r\n\r\n|\n\n)";
-    private static final String REGEX_LINE_END_DUAL_REPLACE = "<br /><br />";
+    private static final String REGEX_LINE_END_DUAL_REPLACE = "---br---";
+    private static final String REGEX_LINE_END_SPLIT = "(---br---)";
     private static final String REGEX_LINE_END_SINGLE_FIND = "(\r\n|\n)";
     private static final String REGEX_LINE_END_SINGLE_REPLACE = " ";
 
@@ -224,10 +228,15 @@ public class ArticleDetailFragment extends Fragment implements
         TextView titleView = (TextView) mRootView.findViewById(R.id.article_title);
         TextView bylineView = (TextView) mRootView.findViewById(R.id.article_byline);
         bylineView.setMovementMethod(new LinkMovementMethod());
-        TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body);
 
+        RecyclerView paragraphView = (RecyclerView) mRootView.findViewById(R.id.article_body);
+        LinearLayoutManager paragraphManager = new LinearLayoutManager(mRootView.getContext());
+        paragraphView.setLayoutManager(paragraphManager);
+        ParagraphListAdapter paragraphAdapter = new ParagraphListAdapter();
+        paragraphView.setAdapter(paragraphAdapter);
 
-        bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
+        // TODO: Restore the font within the RecyclerView list item
+        //bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
 
         if (mCursor != null) {
             mRootView.setAlpha(0);
@@ -257,13 +266,16 @@ public class ArticleDetailFragment extends Fragment implements
                                 + "</font>"));
 
             }
-            bodyView.setText(
-                    Html.fromHtml(
-                            mCursor.getString(ArticleLoader.Query.BODY)
-                                    .replaceAll(REGEX_LINE_END_DUAL_FIND,REGEX_LINE_END_DUAL_REPLACE)
-                                    .replaceAll(REGEX_LINE_END_SINGLE_FIND,REGEX_LINE_END_SINGLE_REPLACE)
-                    )
-            );
+
+            // https://www.youtube.com/watch?v=x-FcOX6ErdI&feature=youtu.be&t=25m39s
+            String fullBodyText = Html.fromHtml(
+                    mCursor.getString(ArticleLoader.Query.BODY)
+                            .replaceAll(REGEX_LINE_END_DUAL_FIND,REGEX_LINE_END_DUAL_REPLACE)
+                            .replaceAll(REGEX_LINE_END_SINGLE_FIND,REGEX_LINE_END_SINGLE_REPLACE)
+            ).toString();
+            String [] bodyParagraphs = fullBodyText.split(REGEX_LINE_END_SPLIT);
+            paragraphAdapter.setParagraphs(bodyParagraphs);
+
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override
@@ -288,7 +300,6 @@ public class ArticleDetailFragment extends Fragment implements
             mRootView.setVisibility(View.GONE);
             titleView.setText("N/A");
             bylineView.setText("N/A" );
-            bodyView.setText("N/A");
         }
     }
 
