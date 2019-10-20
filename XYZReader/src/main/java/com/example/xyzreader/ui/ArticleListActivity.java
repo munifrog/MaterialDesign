@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -175,8 +176,7 @@ public class ArticleListActivity extends ActionBarActivity implements
                     if (transitionName != null) {
                         bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                                 ArticleListActivity.this,
-                                view,
-                                transitionName
+                                Pair.create((View) vh.thumbnailView, transitionName)
                         ).toBundle();
                     }
                     startActivity(intent, bundle);

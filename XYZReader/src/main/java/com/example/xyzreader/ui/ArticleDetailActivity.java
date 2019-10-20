@@ -92,7 +92,11 @@ public class ArticleDetailActivity extends ActionBarActivity
         mUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onSupportNavigateUp();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    finishAfterTransition();
+                } else {
+                    supportFinishAfterTransition();
+                }
             }
         });
 
@@ -139,6 +143,12 @@ public class ArticleDetailActivity extends ActionBarActivity
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mCursor = null;
         mPagerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // http://blogs.quovantis.com/how-to-apply-shared-element-transitions-in-android/
+        supportFinishAfterTransition();
     }
 
     public void onUpButtonFloorChanged(long itemId, ArticleDetailFragment fragment) {
