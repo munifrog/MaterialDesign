@@ -28,7 +28,6 @@ public class ArticleDetailActivity extends ActionBarActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String LIST_POSITION = "list_position";
     public static final String BOOK_ID = "book_id";
-    public static final String TRANSITION_IMAGE_ID = "transition_name_image";
 
     private Cursor mCursor;
     private long mStartId;

@@ -25,7 +25,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.format.DateUtils;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +74,8 @@ public class ArticleDetailFragment extends Fragment implements
     private boolean mIsCard = false;
     private int mStatusBarFullOpacityBottom;
     private static String mTransitionImageId;
+    private static String mTransitionTitleId;
+    private static String mTransitionSubtitleId;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
@@ -105,6 +106,8 @@ public class ArticleDetailFragment extends Fragment implements
         if (arguments.containsKey(ARG_ITEM_ID)) {
             mItemId = arguments.getLong(ARG_ITEM_ID);
             mTransitionImageId = getString(R.string.transition_image, mItemId);
+            mTransitionTitleId = getString(R.string.transition_title, mItemId);
+            mTransitionSubtitleId = getString(R.string.transition_subtitle, mItemId);
         }
 
         mIsCard = getResources().getBoolean(R.bool.detail_is_card);
@@ -220,8 +223,10 @@ public class ArticleDetailFragment extends Fragment implements
         }
 
         TextView titleView = (TextView) mRootView.findViewById(R.id.article_title);
+        ViewCompat.setTransitionName(titleView, mTransitionTitleId);
+
         TextView bylineView = (TextView) mRootView.findViewById(R.id.article_byline);
-        bylineView.setMovementMethod(new LinkMovementMethod());
+        ViewCompat.setTransitionName(bylineView, mTransitionSubtitleId);
 
         RecyclerView paragraphView = (RecyclerView) mRootView.findViewById(R.id.article_body);
         LinearLayoutManager paragraphManager = new LinearLayoutManager(mRootView.getContext());
