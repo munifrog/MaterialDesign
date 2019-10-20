@@ -70,6 +70,7 @@ public class ArticleDetailFragment extends Fragment implements
 
     private int mTopInset;
     private View mPhotoContainerView;
+    private View mPhotoScrim;
     private ImageView mPhotoView;
     private int mScrollY;
     private boolean mIsCard = false;
@@ -155,11 +156,14 @@ public class ArticleDetailFragment extends Fragment implements
             ) {
                 mScrollY = mScrollView.getScrollY();
                 getActivityCast().onUpButtonFloorChanged(mItemId, ArticleDetailFragment.this);
-                mPhotoContainerView.setTranslationY((int) (mScrollY - mScrollY / PARALLAX_FACTOR));
+                float offset = mScrollY / PARALLAX_FACTOR;
+                mPhotoContainerView.setTranslationY((int) (mScrollY - offset));
+                mPhotoScrim.setTranslationY(offset);
                 updateStatusBar();
             }
         });
 
+        mPhotoScrim = mRootView.findViewById(R.id.photo_scrim);
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
         ViewCompat.setTransitionName(mPhotoView, mTransitionImageId);
         mPhotoContainerView = mRootView.findViewById(R.id.photo_container);

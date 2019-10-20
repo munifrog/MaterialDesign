@@ -32,6 +32,7 @@
                     android:scaleType="centerCrop" />
 
                 <View
+                    android:id="@+id/photo_scrim"
                     android:layout_width="match_parent"
                     android:layout_height="112dp"
                     android:background="@drawable/scrim_detail" />
