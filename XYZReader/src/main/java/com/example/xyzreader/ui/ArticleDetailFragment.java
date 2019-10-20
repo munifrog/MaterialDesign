@@ -50,7 +50,6 @@ public class ArticleDetailFragment extends Fragment implements
     private static final String TAG = "ArticleDetailFragment";
 
     public static final String ARG_ITEM_ID = "item_id";
-    public static final String ARG_TRANS_IMAGE_ID = "transition__image_id";
     private static final float PARALLAX_FACTOR = 60f;
     private static final int HEX_HTML_MASK = 0x00ffffff;
 
@@ -90,13 +89,9 @@ public class ArticleDetailFragment extends Fragment implements
     public ArticleDetailFragment() {
     }
 
-    public static ArticleDetailFragment newInstance(
-            long itemId,
-            String imageTransitionId
-    ) {
+    public static ArticleDetailFragment newInstance(long itemId) {
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_ITEM_ID, itemId);
-        arguments.putString(ARG_TRANS_IMAGE_ID, imageTransitionId);
         ArticleDetailFragment fragment = new ArticleDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -109,12 +104,7 @@ public class ArticleDetailFragment extends Fragment implements
         Bundle arguments = getArguments();
         if (arguments.containsKey(ARG_ITEM_ID)) {
             mItemId = arguments.getLong(ARG_ITEM_ID);
-        }
-
-        if (arguments.containsKey(ARG_TRANS_IMAGE_ID)) {
-            mTransitionImageId = arguments.getString(ARG_TRANS_IMAGE_ID);
-        } else {
-            mTransitionImageId = "";
+            mTransitionImageId = getString(R.string.transition_image, mItemId);
         }
 
         mIsCard = getResources().getBoolean(R.bool.detail_is_card);
