@@ -35,8 +35,10 @@
     <color name="black_muted">#ff333333</color>
     <color name="black_faded">#6000</color>
 
+    <color name="transparent">#00000000</color>
+
     <color name="scrim_darkest">#c0000000</color>
-    <color name="scrim_lightest">#00000000</color>
+    <color name="scrim_lightest">@color/transparent</color>
     <color name="scrim_constant">#40000000</color>
 
     <color name="card_title">@color/gray_light</color>

@@ -17,9 +17,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,7 +49,7 @@ public class ArticleDetailFragment extends Fragment implements
     private static final String TAG = "ArticleDetailFragment";
 
     public static final String ARG_ITEM_ID = "item_id";
-    private static final float PARALLAX_FACTOR = 60f;
+    private static final float PARALLAX_FACTOR = 1.25f;
     private static final int HEX_HTML_MASK = 0x00ffffff;
 
     private static final String REGEX_LINE_END_DUAL_FIND = "(\r\n\r\n|\n\n)";
@@ -63,7 +63,8 @@ public class ArticleDetailFragment extends Fragment implements
     private View mRootView;
     private LinearLayout mMetaBar;
     private int mHeaderColor = 0xFF333333;
-    private NestedScrollView mScrollView;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.OnScrollListener mRecyclerScrollListener;
     private ColorDrawable mStatusBarColorDrawable;
 
     private int mTopInset;
@@ -137,24 +138,17 @@ public class ArticleDetailFragment extends Fragment implements
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
         mMetaBar = (LinearLayout) mRootView.findViewById(R.id.meta_bar);
 
-        mScrollView = (NestedScrollView) mRootView.findViewById(R.id.scrollview);
-        mScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.article_body);
+        mScrollY = 0;
+        mRecyclerScrollListener = new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollChange(
-                    NestedScrollView v,
-                    int scrollX,
-                    int scrollY,
-                    int oldScrollX,
-                    int oldScrollY
-            ) {
-                mScrollY = mScrollView.getScrollY();
-                getActivityCast().onUpButtonFloorChanged(mItemId, ArticleDetailFragment.this);
-                float offset = mScrollY / PARALLAX_FACTOR;
-                mPhotoContainerView.setTranslationY((int) (mScrollY - offset));
-                mPhotoScrim.setTranslationY(offset);
-                updateStatusBar();
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                mScrollY -= dy;
+                applyParallax();
+                super.onScrolled(recyclerView, dx, dy);
             }
-        });
+        };
+        mRecyclerView.addOnScrollListener(mRecyclerScrollListener);
 
         mPhotoScrim = mRootView.findViewById(R.id.photo_scrim);
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
@@ -176,6 +170,14 @@ public class ArticleDetailFragment extends Fragment implements
         bindViews();
         updateStatusBar();
         return mRootView;
+    }
+
+    private void applyParallax() {
+        getActivityCast().onUpButtonFloorChanged(mItemId, ArticleDetailFragment.this);
+        float offset = mScrollY / PARALLAX_FACTOR;
+        mPhotoContainerView.setTranslationY((int) (mScrollY - offset));
+        mPhotoScrim.setTranslationY(offset - mScrollY);
+        updateStatusBar();
     }
 
     private void updateStatusBar() {
@@ -345,5 +347,13 @@ public class ArticleDetailFragment extends Fragment implements
             translation += mPhotoContainerView.getTranslationY();
         }
         return translation;
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mRecyclerScrollListener != null) {
+            mRecyclerView.removeOnScrollListener(mRecyclerScrollListener);
+        }
+        super.onDestroy();
     }
 }
