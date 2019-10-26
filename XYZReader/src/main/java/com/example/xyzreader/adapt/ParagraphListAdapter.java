@@ -1,6 +1,7 @@
 package com.example.xyzreader.adapt;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.example.xyzreader.R;
 
 public class ParagraphListAdapter extends RecyclerView.Adapter<ParagraphListAdapter.ParagraphHolder> {
+    private View mView;
     private String [] mParagraphs;
 
     public void setParagraphs(String [] paragraphs) {
@@ -21,12 +23,12 @@ public class ParagraphListAdapter extends RecyclerView.Adapter<ParagraphListAdap
         Context context = parent.getContext();
         int layoutId = R.layout.list_item_paragraph;
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(
+        mView = inflater.inflate(
                 layoutId,
                 parent,
                 false
         );
-        return new ParagraphHolder(view);
+        return new ParagraphHolder(mView);
     }
 
     @Override
@@ -45,6 +47,10 @@ public class ParagraphListAdapter extends RecyclerView.Adapter<ParagraphListAdap
         ParagraphHolder(View itemView) {
             super(itemView);
             mParagraph = (TextView) itemView.findViewById(R.id.tv_paragraph);
+            mParagraph.setTypeface(Typeface.createFromAsset(
+                    mView.getResources().getAssets(),
+                    "Rosario-Regular.ttf")
+            );
         }
 
         void bind (int position) {
