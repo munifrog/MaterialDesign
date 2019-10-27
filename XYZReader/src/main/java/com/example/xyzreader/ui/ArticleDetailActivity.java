@@ -50,10 +50,6 @@ public class ArticleDetailActivity extends ActionBarActivity
             window.getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                             View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                // https://stackoverflow.com/a/26749343
-                window.setStatusBarColor(getColor(R.color.theme_primary_dark));
-            }
             // https://www.androiddesignpatterns.com/2015/03/activity-postponed-shared-element-transitions-part3b.html
             postponeEnterTransition();
         }

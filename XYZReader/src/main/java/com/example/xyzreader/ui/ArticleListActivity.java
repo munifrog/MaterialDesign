@@ -81,12 +81,6 @@ public class ArticleListActivity extends ActionBarActivity implements
 
         ViewCompat.setElevation(toolbarContainerView, getResources().getDimension(R.dimen.elevation_list_toolbar));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // https://stackoverflow.com/a/26749343
-            Window window = getWindow();
-            window.setStatusBarColor(getColor(R.color.theme_primary_dark));
-        }
-
         if (savedInstanceState == null) {
             refresh();
         }
