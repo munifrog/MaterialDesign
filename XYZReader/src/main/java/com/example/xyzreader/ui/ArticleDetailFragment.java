@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.graphics.Palette;
@@ -26,6 +27,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -58,7 +60,7 @@ public class ArticleDetailFragment extends Fragment implements
     private Cursor mCursor;
     private long mItemId;
     private View mRootView;
-    private LinearLayout mMetaBar;
+    private LinearLayout mArticleHeader;
     private int mHeaderColor = 0xFF333333;
     private RecyclerView mRecyclerView;
     private RecyclerView.OnScrollListener mRecyclerScrollListener;
@@ -133,7 +135,17 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-        mMetaBar = (LinearLayout) mRootView.findViewById(R.id.meta_bar);
+        mArticleHeader = (LinearLayout) mRootView.findViewById(R.id.article_header);
+
+        AppBarLayout appBarLayout = (AppBarLayout) mRootView.findViewById(R.id.app_bar_layout);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                ViewCompat.setElevation(appBarLayout, getResources().getDimension(R.dimen.elevation_page));
+                mScrollY = verticalOffset;
+                applyParallax();
+            }
+        });
 
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.article_body);
         mScrollY = 0;
@@ -154,7 +166,8 @@ public class ArticleDetailFragment extends Fragment implements
 
         mStatusBarColorDrawable = new ColorDrawable(0);
 
-        mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
+        ImageButton fabButton = (ImageButton) mRootView.findViewById(R.id.share_fab);
+        fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
@@ -165,6 +178,11 @@ public class ArticleDetailFragment extends Fragment implements
         });
 
         bindViews();
+
+        ViewCompat.setElevation(mPhotoContainerView, getResources().getDimension(R.dimen.elevation_image));
+        ViewCompat.setElevation(mRecyclerView, getResources().getDimension(R.dimen.elevation_page));
+        ViewCompat.setElevation(fabButton, getResources().getDimension(R.dimen.fab_elevation));
+
         updateStatusBar();
         return mRootView;
     }
@@ -280,7 +298,7 @@ public class ArticleDetailFragment extends Fragment implements
                                 Palette p = Palette.generate(bitmap, 12);
                                 mHeaderColor = p.getMutedColor(0xFF333333);
                                 mPhotoView.setImageBitmap(imageContainer.getBitmap());
-                                mMetaBar.setBackgroundColor(mHeaderColor);
+                                mArticleHeader.setBackgroundColor(mHeaderColor);
                                 updateStatusBar();
                             }
                         }

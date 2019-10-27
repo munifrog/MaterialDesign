@@ -30,8 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="112dp"
         android:background="@color/theme_primary"
-        android:gravity="bottom"
-        android:elevation="8dp">
+        android:gravity="bottom">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"

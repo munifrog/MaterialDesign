@@ -10,7 +10,6 @@
         android:id="@+id/photo_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:elevation="@dimen/page_header_elevation"
         android:background="@color/photo_placeholder" >
 
         <!--suppress AndroidLintContentDescription -->
@@ -28,32 +27,35 @@
 
     </FrameLayout>
 
-    <android.support.design.widget.AppBarLayout
+    <com.example.xyzreader.ui.MaxWidthAppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/transparent" >
+        android:layout_gravity="center_horizontal"
+        android:maxWidth="@dimen/detail_card_max_width"
+        android:background="@color/transparent">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll" >
 
-            <com.example.xyzreader.ui.MaxWidthLinearLayout
-                android:orientation="vertical"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:maxWidth="@dimen/detail_card_max_width"
-                android:background="@color/transparent"
-                android:elevation="@dimen/page_elevation"
-                android:layout_marginTop="@dimen/detail_card_top_margin" >
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/heading_spacing"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/detail_card_top_margin"
+                    android:visibility="invisible" />
 
                 <LinearLayout
-                    android:id="@+id/meta_bar"
+                    android:id="@+id/article_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#333"
-                    android:layout_gravity="bottom"
+                    android:layout_gravity="bottom|center_horizontal"
                     android:orientation="vertical"
                     android:paddingStart="@dimen/detail_inner_horiz_margin"
                     android:paddingEnd="@dimen/detail_inner_horiz_margin"
@@ -78,13 +80,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/details_header_text_date" />
+
                 </LinearLayout>
 
-            </com.example.xyzreader.ui.MaxWidthLinearLayout>
+            </LinearLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
-    </android.support.design.widget.AppBarLayout>
+    </com.example.xyzreader.ui.MaxWidthAppBarLayout>
 
     <com.example.xyzreader.ui.MaxWidthRecyclerView
         android:id="@+id/article_body"
@@ -93,7 +96,6 @@
         android:maxWidth="@dimen/detail_card_max_width"
         android:layout_gravity="center_horizontal"
         android:background="@color/details_article_background"
-        android:elevation="@dimen/page_elevation"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:paddingStart="@dimen/detail_inner_horiz_margin"
         android:paddingEnd="@dimen/detail_inner_horiz_margin"
@@ -108,7 +110,6 @@
         android:layout_gravity="bottom|end"
         android:background="@drawable/add_fab_background"
         android:layout_margin="@dimen/fab_margin"
-        android:elevation="@dimen/fab_elevation"
         android:stateListAnimator="@anim/fab_state_list_anim"
         android:contentDescription="@string/action_share" />
 

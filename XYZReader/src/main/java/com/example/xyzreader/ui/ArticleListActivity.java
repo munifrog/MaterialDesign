@@ -79,6 +79,8 @@ public class ArticleListActivity extends ActionBarActivity implements
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         getLoaderManager().initLoader(0, null, this);
 
+        ViewCompat.setElevation(toolbarContainerView, getResources().getDimension(R.dimen.elevation_list_toolbar));
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // https://stackoverflow.com/a/26749343
             Window window = getWindow();
