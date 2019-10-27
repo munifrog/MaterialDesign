@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ShareCompat;
@@ -183,6 +184,9 @@ public class ArticleDetailFragment extends Fragment implements
         ViewCompat.setElevation(mRecyclerView, getResources().getDimension(R.dimen.elevation_page));
         ViewCompat.setElevation(fabButton, getResources().getDimension(R.dimen.fab_elevation));
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getActivity().startPostponedEnterTransition();
+        }
         updateStatusBar();
         return mRootView;
     }

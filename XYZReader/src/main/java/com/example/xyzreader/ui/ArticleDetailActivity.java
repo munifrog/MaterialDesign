@@ -54,6 +54,8 @@ public class ArticleDetailActivity extends ActionBarActivity
                 // https://stackoverflow.com/a/26749343
                 window.setStatusBarColor(getColor(R.color.theme_primary_dark));
             }
+            // https://www.androiddesignpatterns.com/2015/03/activity-postponed-shared-element-transitions-part3b.html
+            postponeEnterTransition();
         }
         setContentView(R.layout.activity_article_detail);
 
