@@ -17,6 +17,7 @@ import java.util.GregorianCalendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.graphics.Palette;
@@ -28,7 +29,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -167,7 +167,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         mStatusBarColorDrawable = new ColorDrawable(0);
 
-        ImageButton fabButton = (ImageButton) mRootView.findViewById(R.id.share_fab);
+        FloatingActionButton fabButton = (FloatingActionButton) mRootView.findViewById(R.id.share_fab);
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

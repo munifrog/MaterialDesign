@@ -102,7 +102,7 @@
         android:paddingTop="@dimen/detail_metabar_vert_padding"
         android:paddingBottom="@dimen/detail_metabar_bottom_padding" />
 
-    <ImageButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/share_fab"
         android:layout_width="56dp"
         android:layout_height="56dp"
