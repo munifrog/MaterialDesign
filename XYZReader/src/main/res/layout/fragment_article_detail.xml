@@ -46,8 +46,8 @@
                 android:orientation="vertical">
 
                 <View
-                    android:id="@+id/heading_spacing"
-                    android:layout_width="0dp"
+                    android:id="@+id/heading_spacer"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/detail_card_top_margin"
                     android:visibility="invisible" />
 

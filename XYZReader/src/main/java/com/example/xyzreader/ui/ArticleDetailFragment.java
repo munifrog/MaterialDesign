@@ -63,6 +63,7 @@ public class ArticleDetailFragment extends Fragment implements
     private View mRootView;
     private LinearLayout mArticleHeader;
     private int mHeaderColor = 0xFF333333;
+    private View mHeadingSpacer;
     private RecyclerView mRecyclerView;
     private RecyclerView.OnScrollListener mRecyclerScrollListener;
     private ColorDrawable mStatusBarColorDrawable;
@@ -138,11 +139,15 @@ public class ArticleDetailFragment extends Fragment implements
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
         mArticleHeader = (LinearLayout) mRootView.findViewById(R.id.article_header);
 
+        mHeadingSpacer = mRootView.findViewById(R.id.heading_spacer);
         AppBarLayout appBarLayout = (AppBarLayout) mRootView.findViewById(R.id.app_bar_layout);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                ViewCompat.setElevation(appBarLayout, getResources().getDimension(R.dimen.elevation_page));
+                ViewCompat.setElevation(appBarLayout, getResources().getDimension(R.dimen.elevation_image));
+                ViewCompat.setElevation(mArticleHeader, getResources().getDimension(R.dimen.elevation_page));
+                ViewCompat.setElevation(mHeadingSpacer, getResources().getDimension(R.dimen.elevation_image));
+
                 mScrollY = verticalOffset;
                 applyParallax();
             }
